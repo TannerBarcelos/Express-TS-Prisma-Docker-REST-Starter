@@ -46,17 +46,6 @@ npm install
 Make run build
 ```
 
-5. Seed and Migrate the database so your schema and database get in sync for development
-
-- Open Docker desktop and enter the API container
-- Navigate to the terminal tab and enter the following command. This will sync your Prisma schema with the running database by creating an initial migration on the database to start a history of database changes and more
-- This will prompt you to enter a migration name - by convention, the initial migration should be called init
-  > Note - You can ommit this step if you change the host of your db to be localhost and re-run the container. You can just run a migration on that locally and then you can comment the variable back out, uncomment your original variable and when you re-build the dev-containers, your app will have an up to date db
-
-```bash
-npm run db:migrate && npm run seed
-```
-
 ---
 
 ### Exploring the database
