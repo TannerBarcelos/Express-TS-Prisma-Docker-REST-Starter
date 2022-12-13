@@ -2,6 +2,8 @@
 
 This project serves as a template and demonstration for developing a modern Node / Express, Typescript based REST API. We use Prisma as an ORM to interact with a local Postgres database being deployed through Docker.
 
+To read about the project and get an in-depth guide on running the app, to testing and everything in between, see my blog series on how I created this project, why I did it, how to do it yourself, how to run it if you are not interested in re-building this from scratch and so much more! **Link coming soon - for now, follow this guide for setup instructions**
+
 ### Run the project
 
 1. Create a .env file and add the following configuration variables
@@ -45,6 +47,15 @@ npm install
 ```bash
 Make run build
 ```
+
+> **Note**
+> To make updates to your models and have the prisma schema and client also update and get in sync with the database, you must uncomment the DATABASE_URL that points to localhost and comment out the DATABASE_URL that points to postgres (container name). To push a change to the db, run a migration, seed or do anything else, you need to run the commands through the localhost connection as the container_name connection will fail.
+>
+> I have included a starting migration file in the prisma folder which will automatically sync up the starter prisma models with the newly created Postgres DB. All you need to do is run the Make command above and you will be good to go.
+>
+> Just remember - as this is a starter repo, I assume many users will want to delete the models and designt their own stuff. In order for your local environment to change and have the DB be in sync, just uncomment the localhost variable like mentioned earlier, run your pushes / migrations, etc. and then switch back.
+>
+> **You can also run prisma commands within the container and ommit this step. Given the use of Docker volumes, if you do a Prisma migrate or push, the local environment will sync with the container and you will still get the desired behavior.. this is just less user friendly**
 
 ---
 
