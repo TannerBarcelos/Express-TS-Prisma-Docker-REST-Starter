@@ -1,0 +1,12 @@
+FROM node:19
+WORKDIR /app
+COPY package*.json ./
+RUN npm install && npm cache clean --force
+COPY ./ ./
+
+# Generate the prisma CLI for the given models in the prisma schema
+RUN npx prisma generate
+
+EXPOSE ${PORT}
+
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,7 @@
+node_modules
+docs
+tests
+.prettier*
+jest*
+Makefile
+README*
