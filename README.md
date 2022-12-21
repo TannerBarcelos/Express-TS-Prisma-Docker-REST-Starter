@@ -49,9 +49,9 @@ Make run build
 ```
 
 > **Note**
-> To make updates to your models and have the prisma schema and client also update and get in sync with the database, you must uncomment the DATABASE_URL that points to localhost and comment out the DATABASE_URL that points to postgres (container name). To push a change to the db, run a migration, seed or do anything else, you need to run the commands through the localhost connection as the container_name connection will fail.
+> To make updates to your models and have the prisma schema and client also update and get in sync with the database, you must uncomment the DATABASE_URL that points to localhost and comment out the DATABASE_URL that points to postgres (container name). To push a change to the db, run a migration, seed or do anything else, you need to run the commands through the localhost connection as the container_name connection will fail. Once you finish the stuff you needed to do, comment out the localhost url and uncomment the container url so that you can re-run the containers.
 >
-> I have included a starting migration file in the prisma folder which will automatically sync up the starter prisma models with the newly created Postgres DB. All you need to do is run the Make command above and you will be good to go.
+> I have included a starting migration file in the prisma folder which will automatically sync up the starter prisma models with the newly created Postgres DB. All you need to do is run the Make command above and you will be good to go. If this did not exist, you'd need to follow the callout above and change the URL, run a migration and then re-connect to the container with the new migration file locally which will be copied over to the container and the generate command will create a new, up to date Prisma Client as well as updated tables / database in the container.
 >
 > Just remember - as this is a starter repo, I assume many users will want to delete the models and designt their own stuff. In order for your local environment to change and have the DB be in sync, just uncomment the localhost variable like mentioned earlier, run your pushes / migrations, etc. and then switch back.
 >
