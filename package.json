@@ -22,7 +22,8 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
-    "prisma": "^4.7.1"
+    "prisma": "^4.7.1",
+    "zod-validation-error": "^0.3.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

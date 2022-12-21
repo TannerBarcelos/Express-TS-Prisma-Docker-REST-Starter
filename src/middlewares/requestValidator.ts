@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
+import { fromZodError } from 'zod-validation-error';
 
 interface Validators {
   body?: AnyZodObject;
@@ -12,14 +13,18 @@ export const requestValidator = (validators: Validators) => {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       for (const property in validators) {
-        request[property as keyof Validators] = await validators[
+        const validatedProperties = await validators[
           property as keyof Validators
-        ]?.parseAsync(request[property as keyof Validators]);
+        ]?.parseAsync(
+          request[property as keyof Validators] // body || query || params and all the values that exist when arriving
+        );
+        request[property as keyof Validators] = validatedProperties; // the parsed data or fails and goes to catch
       }
       next();
     } catch (error) {
       if (error instanceof ZodError) {
         response.status(422);
+        error = fromZodError(error); // format the zod error to look much cleaner in logs
       }
       next(error);
     }
