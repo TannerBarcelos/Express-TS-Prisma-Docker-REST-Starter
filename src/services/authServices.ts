@@ -1,5 +1,5 @@
 import type { Signup } from '../utils/zodTypes';
-import { prisma as prismaClient } from '../config/prisma';
+import { prismaClient } from '../config/prismaClient';
 import { genToken } from '../utils/helpers';
 
 /**
@@ -13,8 +13,7 @@ const signupService = async (user: Signup) => {
       name: user.name,
     },
   });
-  const token = genToken(createdUser);
-  return { createdUser, token };
+  return { createdUser, token: genToken(createdUser) };
 };
 
 export default {

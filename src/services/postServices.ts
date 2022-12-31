@@ -1,5 +1,5 @@
 import type { Post } from '../utils/zodTypes';
-import { prisma as prismaClient } from '../config/prisma';
+import { prismaClient } from '../config/prismaClient';
 
 /**
  * @returns All posts and the user who posted it (like a social feed on Reddit)

@@ -1,14 +1,25 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
+import { Post } from '../src/utils/zodTypes';
 
-const prisma = new PrismaClient();
+const prismaClient = new PrismaClient();
+
+function genRandomPosts(rounds: number = 5) {
+  const posts: Pick<Post, 'content'>[] = [];
+  for (let i = 0; i < rounds; i++) {
+    posts.push({
+      content: faker.lorem.lines(2),
+    });
+  }
+  return posts;
+}
 
 async function main() {
   for (let i = 0; i < 25; i++) {
     const email = faker.internet.email();
     const name = faker.name.firstName() + ' ' + faker.name.lastName();
     const password = faker.internet.password(8);
-    await prisma.user.upsert({
+    await prismaClient.user.upsert({
       where: { email },
       update: {},
       create: {
@@ -16,8 +27,8 @@ async function main() {
         name,
         password,
         posts: {
-          create: {
-            content: faker.lorem.lines(2),
+          createMany: {
+            data: genRandomPosts(),
           },
         },
       },
@@ -27,10 +38,10 @@ async function main() {
 
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await prismaClient.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
-    await prisma.$disconnect();
+    await prismaClient.$disconnect();
     process.exit(1);
   });
