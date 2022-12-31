@@ -1,29 +1,26 @@
 {
-  "name": "postgres_node_ts",
+  "name": "rest-starter",
   "version": "1.0.0",
-  "description": "Postgres, Prisma, Express Modern REST API example",
+  "description": "Postgres, Prisma, Express Modern REST API starter",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "db:migrate": "npx prisma migrate dev",
     "test": "jest",
-    "seed": "npx prisma db seed",
     "pretty": "prettier --write \"./**/*.{ts,json}\""
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
   },
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.7.1",
+    "@prisma/client": "^4.8.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "jsonwebtoken": "^8.5.1",
-    "prisma": "^4.7.1",
+    "jsonwebtoken": "^9.0.0",
     "zod-validation-error": "^0.3.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -41,6 +38,7 @@
     "jest": "^29.3.1",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.1",
+    "prisma": "^4.8.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.3",
     "ts-node-dev": "^2.0.0",
