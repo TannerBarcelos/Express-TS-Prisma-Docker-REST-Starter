@@ -1,7 +1,6 @@
 import userServices from '../services/userServices';
 import type { UserId, User } from '../utils/zodTypes';
 import { NextFunction, Request, Response } from 'express';
-import { genHash } from '../utils/helpers';
 
 export const getUsers = async (
   request: Request,
