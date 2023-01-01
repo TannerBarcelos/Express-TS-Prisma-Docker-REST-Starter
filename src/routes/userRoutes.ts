@@ -3,9 +3,11 @@ import { Router } from 'express';
 import { authCheck } from '../middlewares/authCheck';
 import { requestValidator } from '../middlewares/requestValidator';
 import { UserIdValidator, UserValidator } from '../utils/zodTypes';
+
 const router = Router();
 
-router.get('/all', authCheck, requestValidator({}), userControllers.getUsers);
+router.get('/all', authCheck, userControllers.getUsers);
+
 router.get(
   '/get/:id',
   authCheck,
@@ -14,6 +16,7 @@ router.get(
   }),
   userControllers.getUser
 );
+
 router.put(
   '/update/:id',
   authCheck,
@@ -23,6 +26,7 @@ router.put(
   }),
   userControllers.updateUser
 );
+
 router.delete(
   '/delete/:id',
   authCheck,

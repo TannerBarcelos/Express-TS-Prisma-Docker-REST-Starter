@@ -6,15 +6,18 @@ import { prismaClient } from '../config/prismaClient';
  */
 const getAllUsers = async () => {
   const users = await prismaClient.user.findMany({
-    include: {
+    select: {
+      name: true,
+      createdAt: true,
       posts: true,
+      id: true,
     },
   });
   return users;
 };
 
 /**
- * @param id - Get user by id
+ * @param id - Get user by id (not same as getting yourself [profile])
  * @returns User
  */
 const getUserById = async (
@@ -25,8 +28,23 @@ const getUserById = async (
     where: {
       id: Number(id),
     },
-    include: {
+    select: {
+      name: true,
+      createdAt: true,
       posts: opts.includePosts,
+      id: true,
+    },
+  });
+};
+
+/**
+ * @param id - Get user profile by id
+ * @returns User
+ */
+const getUserProfile = async (id: string) => {
+  return await prismaClient.user.findUnique({
+    where: {
+      id: Number(id),
     },
   });
 };
@@ -34,17 +52,15 @@ const getUserById = async (
 /**
  * @param id - Get User by email
  * @returns User
+ * @description Utility function to help look up the user in the DB by email to see if they exist. This is usefule for registration and logging in
  */
-const getUserByEmail = async (
-  email: string,
-  opts: { includePosts: boolean } = { includePosts: true }
-) => {
+const getUserByEmail = async (email: string) => {
   return await prismaClient.user.findUnique({
     where: {
       email,
     },
     include: {
-      posts: opts.includePosts,
+      posts: false,
     },
   });
 };
@@ -80,6 +96,7 @@ export default {
   getAllUsers,
   getUserByEmail,
   getUserById,
+  getUserProfile,
   updateUser,
   deleteUser,
 };

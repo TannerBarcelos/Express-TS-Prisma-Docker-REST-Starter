@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { Post, PostId } from '../utils/zodTypes';
+import { Post, PostId, User } from '../utils/zodTypes';
 import postServices from '../services/postServices';
 
 export const getAllPosts = async (
   request: Request,
-  response: Response<{ data: any }>,
+  response: Response<{
+    data: (Post & {
+      author: User;
+    })[];
+  }>,
   next: NextFunction
 ) => {
   try {
@@ -17,7 +21,7 @@ export const getAllPosts = async (
 
 export const getPost = async (
   request: Request<PostId>,
-  response: Response<{ data: any }>,
+  response: Response<{ data: Post }>,
   next: NextFunction
 ) => {
   try {
@@ -28,66 +32,58 @@ export const getPost = async (
     }
     response.status(200).json({ data: post });
   } catch (error) {
-    response.status(500);
     next(error);
   }
 };
 
 export const getUsersPosts = async (
   request: Request<PostId>,
-  response: Response<{ data: any }>,
+  response: Response<{ data: Post[] }>,
   next: NextFunction
 ) => {
   try {
     const postExists = await postServices.getPost(request.params.id);
-
     if (!postExists) {
       response.status(404);
       throw new Error('The post you requested does not exist');
     }
-
     const usersPosts = await postServices.getPostsByAuthor(
       request!.user!.id.toString()
     );
     response.status(200).json({ data: usersPosts });
   } catch (error) {
-    response.status(500);
     next(error);
   }
 };
 
 export const updatePost = async (
   request: Request<PostId>,
-  response: Response<{ data: any }>,
+  response: Response<{ data: Post }>,
   next: NextFunction
 ) => {
   try {
-    if (Number(request.params.id) !== Number(request!.user!.id)) {
+    if (Number(request.params.id) !== request!.user!.id) {
       response.status(401);
       throw new Error('Action cannot be completed. User not authorized 🔒');
     }
-
     const foundPost = await postServices.getPost(request.params.id);
-
     if (!foundPost) {
       response.status(404);
       throw new Error('Action cannot be completed. Post does not exist');
     }
-
     const updatedPost = await postServices.updatePost(
       request.params.id,
       request.body
     );
     response.status(200).json({ data: updatedPost });
   } catch (error) {
-    response.status(500);
     next(error);
   }
 };
 
 export const createPost = async (
   request: Request<{}, {}, Post>,
-  response: Response<{ data: any }>,
+  response: Response<{ data: Post }>,
   next: NextFunction
 ) => {
   try {
@@ -98,7 +94,6 @@ export const createPost = async (
     const createdPost = await postServices.createPost(post);
     response.status(201).json({ data: createdPost });
   } catch (error) {
-    response.status(500);
     next(error);
   }
 };
@@ -110,20 +105,17 @@ export const deletePost = async (
 ) => {
   try {
     const foundPost = await postServices.getPost(request.params.id);
-
     if (!foundPost) {
       response.status(404);
       throw new Error('Action cannot be completed. Post does not exist');
     }
-
-    if (Number(foundPost.authorId) !== Number(request!.user!.id)) {
+    if (Number(foundPost.authorId) !== request!.user!.id) {
       response.status(401);
       throw new Error('Action cannot be completed. User not authorized 🔒');
     }
     await postServices.deletePost(request.params.id);
     response.status(204).end();
   } catch (error) {
-    response.status(500);
     next(error);
   }
 };

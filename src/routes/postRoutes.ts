@@ -29,14 +29,15 @@ postRouter.post(
   }),
   postContollers.createPost
 );
+
 postRouter.get(
   '/get/:id',
-  authCheck,
   requestValidator({
     params: PostIdValidator,
   }),
   postContollers.getPost
 );
+
 postRouter.put(
   '/update/:id',
   authCheck,

@@ -22,11 +22,6 @@ authRouter.post(
   authControllers.signupUser
 );
 
-authRouter.get(
-  '/logout',
-  authCheck,
-  requestValidator({}),
-  authControllers.logoutUser
-);
+authRouter.get('/logout', authCheck, authControllers.logoutUser);
 
 export default authRouter;

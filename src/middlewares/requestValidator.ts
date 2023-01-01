@@ -24,9 +24,10 @@ export const requestValidator = (validators: Validators) => {
     } catch (error) {
       if (error instanceof ZodError) {
         response.status(422);
-        error = fromZodError(error); // format the zod error to look much cleaner in logs
+        next(fromZodError(error));
+      } else {
+        next(error);
       }
-      next(error);
     }
   };
 };
