@@ -5,12 +5,12 @@ import { genToken } from '../utils/helpers';
 /**
  * @returns Signed up user
  */
-const signupService = async (user: Signup) => {
+const signupService = async ({ email, name, password }: Signup) => {
   const createdUser = await prismaClient.user.create({
     data: {
-      email: user.email,
-      password: user.password,
-      name: user.name,
+      email,
+      password,
+      name,
     },
   });
   return { createdUser, token: genToken(createdUser) };

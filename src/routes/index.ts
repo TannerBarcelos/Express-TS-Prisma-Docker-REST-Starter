@@ -6,7 +6,6 @@ import authRoutes from './authRoutes';
 
 const router = Router();
 
-// Registering each route path
 router.use('/users', userRoutes);
 router.use('/posts', postRoutes);
 router.use('/auth', authRoutes);
