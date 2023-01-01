@@ -25,3 +25,9 @@ test:
 # Format
 pretty:
 	npm run pretty
+
+# Lint
+lint:
+	npm run lint
+lint-fix:
+	npm run lint:fix
