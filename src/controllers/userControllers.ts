@@ -1,6 +1,7 @@
 import userServices from '../services/userServices';
 import type { UserId, User } from '../utils/zodTypes';
 import { NextFunction, Request, Response } from 'express';
+import { genHash } from '../utils/helpers';
 
 export const getUsers = async (
   request: Request,
@@ -36,7 +37,7 @@ export const getUser = async (
 
 export const getUserProfile = async (
   request: Request<UserId>,
-  response: Response<{ data: User }>,
+  response: Response<{ data: Omit<User, 'updatedAt' | 'password' | 'email'> }>,
   next: NextFunction
 ) => {
   try {
@@ -52,8 +53,8 @@ export const getUserProfile = async (
 };
 
 export const updateUser = async (
-  request: Request<UserId>,
-  response: Response<{ data: User }>,
+  request: Request<UserId, {}, Omit<User, 'updatedAt' | 'createdAt' | 'id'>>,
+  response: Response<{ data: Omit<User, 'password'> }>,
   next: NextFunction
 ) => {
   try {
@@ -65,6 +66,7 @@ export const updateUser = async (
       request.params.id,
       request.body
     );
+
     response.status(200).json({ data: updatedUser });
   } catch (error) {
     next(error);

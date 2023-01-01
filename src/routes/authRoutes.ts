@@ -1,15 +1,15 @@
 import * as authControllers from '../controllers/authControllers';
 import { Router } from 'express';
 import { requestValidator } from '../middlewares/requestValidator';
-import { LoginValidator, SignupValidator } from '../utils/zodTypes';
+import { SigninValidator, SignupValidator } from '../utils/zodTypes';
 import { authCheck } from '../middlewares/authCheck';
 
 const authRouter = Router();
 
 authRouter.post(
-  '/login',
+  '/signin',
   requestValidator({
-    body: LoginValidator,
+    body: SigninValidator,
   }),
   authControllers.signinUser
 );
@@ -22,6 +22,6 @@ authRouter.post(
   authControllers.signupUser
 );
 
-authRouter.get('/logout', authCheck, authControllers.logoutUser);
+authRouter.get('/signout', authCheck, authControllers.signout);
 
 export default authRouter;

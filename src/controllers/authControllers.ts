@@ -52,7 +52,7 @@ export const signupUser = async (
   }
 };
 
-export const logoutUser = async (
+export const signout = async (
   request: Request,
   response: Response<{ data: string }>,
   next: NextFunction

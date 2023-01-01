@@ -16,10 +16,10 @@ const getAllPosts = async () => {
 /**
  * @returns All posts for a specific user (author)
  */
-const getPostsByAuthor = async (authorId: string) => {
+const getPostsByAuthor = async (authorId: number) => {
   const authorsPosts = await prismaClient.post.findMany({
     where: {
-      authorId: Number(authorId),
+      authorId,
     },
   });
   return authorsPosts;
@@ -33,6 +33,9 @@ const getPost = async (postId: string) => {
   const post = await prismaClient.post.findUnique({
     where: {
       id: Number(postId),
+    },
+    include: {
+      author: true,
     },
   });
   return post;
@@ -57,9 +60,9 @@ const updatePost = async (postId: string, payload: Post) => {
 /**
  * @returns A newly created Post
  */
-const createPost = async (payload: Post) => {
+const createPost = async (newPost: Post) => {
   const createdPost = await prismaClient.post.create({
-    data: payload,
+    data: newPost,
   });
   return createdPost;
 };

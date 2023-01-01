@@ -7,44 +7,45 @@ import { prismaClient } from '../config/prismaClient';
 const getAllUsers = async () => {
   const users = await prismaClient.user.findMany({
     select: {
+      id: true,
       name: true,
       createdAt: true,
-      posts: true,
-      id: true,
     },
   });
   return users;
 };
 
 /**
- * @param id - Get user by id (not same as getting yourself [profile])
+ * @param id - Get basic user info by user ID
  * @returns User
  */
-const getUserById = async (
-  id: string,
-  opts: { includePosts: boolean } = { includePosts: true }
-) => {
+const getUserById = async (userId: string) => {
   return await prismaClient.user.findUnique({
     where: {
-      id: Number(id),
+      id: Number(userId),
     },
     select: {
+      id: true,
       name: true,
       createdAt: true,
-      posts: opts.includePosts,
-      id: true,
     },
   });
 };
 
 /**
- * @param id - Get user profile by id
+ * @param id - Get a users profile by user ID - (Users public profile to view)
  * @returns User
  */
-const getUserProfile = async (id: string) => {
+const getUserProfile = async (userId: string) => {
   return await prismaClient.user.findUnique({
     where: {
-      id: Number(id),
+      id: Number(userId),
+    },
+    select: {
+      createdAt: true,
+      id: true,
+      name: true,
+      posts: true,
     },
   });
 };
@@ -54,13 +55,10 @@ const getUserProfile = async (id: string) => {
  * @returns User
  * @description Utility function to help look up the user in the DB by email to see if they exist. This is usefule for registration and logging in
  */
-const getUserByEmail = async (email: string) => {
+const getUserByEmail = async (userEmail: string) => {
   return await prismaClient.user.findUnique({
     where: {
-      email,
-    },
-    include: {
-      posts: false,
+      email: userEmail,
     },
   });
 };
@@ -69,12 +67,20 @@ const getUserByEmail = async (email: string) => {
  * @param id - Unique user id
  * @returns updated users id
  */
-const updateUser = async (id: string, payload: User) => {
+const updateUser = async (userId: string, updateUserPayload: User) => {
   const updatedUser = await prismaClient.user.update({
     where: {
-      id: Number(id),
+      id: Number(userId),
     },
-    data: payload,
+    data: updateUserPayload,
+    select: {
+      createdAt: true,
+      email: true,
+      name: true,
+      updatedAt: true,
+      id: true,
+      password: false,
+    },
   });
   return updatedUser;
 };
@@ -83,10 +89,10 @@ const updateUser = async (id: string, payload: User) => {
  * @param id - Unique user id
  * @returns deleted users ID
  */
-const deleteUser = async (id: string) => {
+const deleteUser = async (userId: string) => {
   const deletedUser = await prismaClient.user.delete({
     where: {
-      id: Number(id),
+      id: Number(userId),
     },
   });
   return deletedUser;

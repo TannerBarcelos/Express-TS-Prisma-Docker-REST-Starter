@@ -9,12 +9,21 @@ const router = Router();
 router.get('/all', authCheck, userControllers.getUsers);
 
 router.get(
-  '/get/:id',
+  '/:id',
   authCheck,
   requestValidator({
     params: UserIdValidator,
   }),
   userControllers.getUser
+);
+
+router.get(
+  '/profile/:id',
+  authCheck,
+  requestValidator({
+    params: UserIdValidator,
+  }),
+  userControllers.getUserProfile
 );
 
 router.put(

@@ -31,9 +31,9 @@ export const UserValidator = z.object({
     .string()
     .min(2, 'Name is required and must be at least 2 characters long'),
   email: z.string().email(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  id: z.number(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+  id: z.number().optional(),
   password: z
     .string()
     .min(8, 'Password is required and must be 8 or more characters long'),
@@ -49,7 +49,7 @@ export const UserIdValidator = z.object({
 /**
  * Auth payload validators
  */
-export const LoginValidator = z.object({
+export const SigninValidator = z.object({
   email: z.string(),
   password: z
     .string()
@@ -75,5 +75,5 @@ export type User = z.infer<typeof UserValidator>;
 export type UserId = z.infer<typeof UserIdValidator>;
 
 // Auth types - Infer types of Login and Signup to use for helper code, params etc
-export type Login = z.infer<typeof LoginValidator>;
+export type Signin = z.infer<typeof SigninValidator>;
 export type Signup = z.infer<typeof SignupValidator>;

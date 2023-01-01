@@ -31,7 +31,7 @@ postRouter.post(
 );
 
 postRouter.get(
-  '/get/:id',
+  '/:id',
   requestValidator({
     params: PostIdValidator,
   }),
