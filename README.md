@@ -1,10 +1,10 @@
-## Express - TypeScript - Prisma - Zod - Docker REST API Starter
+## Express - TypeScript - Prisma - Zod - Docker API Starter
 
 This project serves as a template and demonstration for developing a modern Node / Express, Typescript based REST API. We use Prisma as an ORM to interact with a local Postgres database being deployed through Docker.
 
-To read about the project and get an in-depth guide on running the app, to testing and everything in between, see my blog series on how I created this project, why I did it, how to do it yourself, how to run it if you are not interested in re-building this from scratch and so much more! **Link coming soon - for now, follow this guide for setup instructions**
+To read about the project and get an in-depth guide on running the app, to testing and everything in between, [see my blog series](https://blog.tannerbarcelos.com/creating-a-modern-rest-api-using-prisma-typescript-express-and-docker-part-1) on how I created this project, why I did it, how to do it yourself, how to run it if you are not interested in re-building this from scratch and so much more!
 
-### Run the project
+### Setup and Run
 
 1. Create a .env file and add the following configuration variables
 
@@ -23,7 +23,7 @@ DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/$
 # This is easier and a bit my user friendly
 # DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}"
 
-# App related env-vars
+# App related env-**vars**
 PORT=<desired_port_for_server>
 DB_PORT=<desired_port_for_db>
 
@@ -33,6 +33,15 @@ JWT_SECRET_KEY=<token_secret>
 AUTH_COOKIE_NAME=<cookie_name_for_jwt_auth>
 PORT=<desired_port_for_server>
 ```
+
+> **Note**
+> If you look at the .env variables above, I call out that you should uncomment the omitted `DATABASE_URL` that points to `@localhost` if you need to run prisma related commands like `npx prisma migrate dev`, `npx prisma studio` etc. The reason this has to be done is that currently, the uncommented `DATABASE_URL` points to `@postgres` due to our whole app (REST API and Postgres) running in a Docker environment.
+>
+> If we had solely deployed Postgres in Docker and did not use Docker for the API, then the need for pointing to `@postgres` would be meaningless as we port map the container to the host machines default postgres port. You would not need two versions of a `DATABASE_URL` because the REST API would always be running on `localhost` and the container would be as well.
+>
+> So, because our whole project is dockerized, we need two `DATABASE_URL` variables. One that points at the container so that when Prisma runs its ORM commands on the database from within the Dockerized API, it will know where to go (because Docker Networking requires that all services must communicate on the same network leveraging the container name instead of `localhost`). The commented out `DATABASE_URL` is to only be uncommented, and then commenting out the reference to `@postgres` when you need to run local migrations, prisma studio to visualize the database in a GUI and more database related work.
+>
+> **You can also run prisma commands within the container and ommit the 2 `DATABASE_URL` environment variable paradigm and only need the `@localhost` url. Given the use of Docker volumes, if you do a Prisma migrate or push, the local environment will sync with the container and you will still get the desired behavior.. this is just less user friendly. However, if you require Prisma Studio, then again, you'd need the 2 env var approach**
 
 2. Install dependencies
 
@@ -47,15 +56,6 @@ npm install
 ```bash
 Make run build
 ```
-
-> **Note**
-> To make updates to your models and have the prisma schema and client also update and get in sync with the database, you must uncomment the DATABASE_URL that points to localhost and comment out the DATABASE_URL that points to postgres (container name). To push a change to the db, run a migration, seed or do anything else, you need to run the commands through the localhost connection as the container_name connection will fail. Once you finish the stuff you needed to do, comment out the localhost url and uncomment the container url so that you can re-run the containers.
->
-> I have included a starting migration file in the prisma folder which will automatically sync up the starter prisma models with the newly created Postgres DB. All you need to do is run the Make command above and you will be good to go. If this did not exist, you'd need to follow the callout above and change the URL, run a migration and then re-connect to the container with the new migration file locally which will be copied over to the container and the generate command will create a new, up to date Prisma Client as well as updated tables / database in the container.
->
-> Just remember - as this is a starter repo, I assume many users will want to delete the models and designt their own stuff. In order for your local environment to change and have the DB be in sync, just uncomment the localhost variable like mentioned earlier, run your pushes / migrations, etc. and then switch back.
->
-> **You can also run prisma commands within the container and ommit this step. Given the use of Docker volumes, if you do a Prisma migrate or push, the local environment will sync with the container and you will still get the desired behavior.. this is just less user friendly**
 
 ---
 
